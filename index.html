@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio Eagle | Premium Visual Production</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables */
+        :root {
+            --gold: #f39c12;
+            --dark-bg: #080808;
+            --card-bg: #111111;
+            --text-main: #ffffff;
+            --text-muted: #888888;
+            --vector-pattern: radial-gradient(rgba(243, 156, 18, 0.15) 2px, transparent 2px);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; font-family: 'Outfit', sans-serif; }
+        body { background-color: var(--dark-bg); color: var(--text-main); overflow-x: hidden; }
+
+        /* Typography & Globals */
+        h1, h2, h3 { font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+        p { line-height: 1.8; color: var(--text-muted); }
+        .highlight { color: var(--gold); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        /* Modern Background Vector Pattern */
+        .bg-pattern {
+            background-image: var(--vector-pattern);
+            background-size: 30px 30px;
+        }
+
+        /* Navbar */
+        header {
+            position: fixed; top: 0; width: 100%; z-index: 1000;
+            padding: 20px 0;
+            background: rgba(8, 8, 8, 0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            transition: 0.3s;
+        }
+        .nav-inner { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 28px; color: #fff; text-decoration: none; display: flex; align-items: center; gap: 10px; }
+        .logo svg { width: 35px; fill: var(--gold); }
+        nav a { color: #fff; text-decoration: none; margin-left: 30px; font-weight: 600; font-size: 14px; text-transform: uppercase; transition: 0.3s; }
+        nav a:hover { color: var(--gold); }
+
+        /* Hero Slider Section */
+        .hero { position: relative; height: 100vh; overflow: hidden; display: flex; align-items: center; }
+        .slide {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover; background-position: center;
+            opacity: 0; transition: opacity 1s ease-in-out; transform: scale(1.05);
+        }
+        .slide.active { opacity: 1; transform: scale(1); transition: opacity 1s ease, transform 6s linear; }
+        
+        .hero-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(90deg, rgba(8,8,8,0.9) 0%, rgba(8,8,8,0.4) 100%);
+            z-index: 1;
+        }
+        
+        .hero-content {
+            position: relative; z-index: 2; max-width: 700px;
+            padding-left: 5%;
+        }
+        .hero-content h1 { font-size: 65px; line-height: 1.1; margin-bottom: 20px; }
+        .hero-content p { font-size: 18px; color: #ddd; margin-bottom: 40px; font-weight: 300; }
+        
+        .btn {
+            display: inline-block; padding: 16px 40px; background: var(--gold); color: #000;
+            text-decoration: none; font-weight: 800; border-radius: 4px;
+            text-transform: uppercase; letter-spacing: 1px; transition: 0.3s;
+        }
+        .btn:hover { background: #fff; box-shadow: 0 0 20px rgba(243, 156, 18, 0.6); }
+
+        /* About Section (Vectors + Content) */
+        .about { padding: 120px 0; display: flex; gap: 50px; align-items: center; position: relative; }
+        .about-text { flex: 1; }
+        .about-text h2 { font-size: 40px; margin-bottom: 20px; }
+        .about-vector { flex: 1; position: relative; }
+        .about-vector svg { width: 100%; max-width: 500px; filter: drop-shadow(0 0 30px rgba(243, 156, 18, 0.2)); }
+        
+        /* Floating abstract shape behind about */
+        .blob {
+            position: absolute; top: -50px; right: 0; width: 400px; height: 400px;
+            background: var(--gold); filter: blur(150px); opacity: 0.15; z-index: -1; border-radius: 50%;
+        }
+
+        /* Services Grid (With SVG Vectors) */
+        .services { padding: 100px 0; background-color: var(--card-bg); text-align: center; }
+        .section-header { margin-bottom: 60px; }
+        .section-header h2 { font-size: 42px; }
+        .section-header p { color: var(--gold); letter-spacing: 2px; }
+
+        .service-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .service-card {
+            background: var(--dark-bg); padding: 50px 30px; border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.03); transition: 0.4s; position: relative; overflow: hidden;
+        }
+        .service-card:hover { transform: translateY(-10px); border-color: var(--gold); }
+        .service-icon { width: 60px; height: 60px; fill: var(--gold); margin-bottom: 25px; }
+        .service-card h3 { font-size: 22px; margin-bottom: 15px; }
+
+        /* Portfolio Slider / Grid */
+        .portfolio { padding: 120px 0; position: relative; }
+        .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 50px; }
+        .gallery-item {
+            height: 300px; background-size: cover; background-position: center;
+            border-radius: 8px; position: relative; overflow: hidden; cursor: pointer;
+        }
+        .gallery-item::after {
+            content: ''; position: absolute; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); opacity: 0; transition: 0.3s;
+        }
+        .gallery-item:hover::after { opacity: 1; }
+        .gallery-item:hover { transform: scale(1.02); z-index: 2; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+
+        /* Work Process (Vector Timeline) */
+        .process { padding: 100px 0; background: var(--card-bg); text-align: center; }
+        .timeline { display: flex; justify-content: center; gap: 40px; margin-top: 50px; flex-wrap: wrap; }
+        .step { flex: 1; min-width: 200px; position: relative; }
+        .step-icon {
+            width: 80px; height: 80px; background: var(--dark-bg); border: 2px dashed var(--gold);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 20px; font-size: 24px; font-weight: bold; color: var(--gold);
+        }
+        .step h4 { font-size: 18px; margin-bottom: 10px; }
+
+        /* Contact Section */
+        .contact { padding: 120px 0; text-align: center; position: relative; }
+        .contact-box {
+            background: var(--card-bg); max-width: 800px; margin: 0 auto; padding: 60px;
+            border-radius: 16px; border-top: 4px solid var(--gold); box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            position: relative; z-index: 2;
+        }
+        .contact-details { display: flex; justify-content: space-around; margin-top: 40px; flex-wrap: wrap; gap: 20px; }
+        .info h4 { font-size: 14px; color: var(--gold); margin-bottom: 5px; }
+        .info p { font-size: 18px; color: #fff; font-weight: 600; }
+
+        footer { text-align: center; padding: 30px; background: #000; font-size: 14px; color: #555; }
+
+        @media (max-width: 768px) {
+            .nav-inner { flex-direction: column; }
+            nav { margin-top: 15px; }
+            nav a { margin: 0 10px; }
+            .hero-content h1 { font-size: 40px; }
+            .about { flex-direction: column; text-align: center; }
+            .gallery { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container nav-inner">
+            <a href="#" class="logo">
+                <!-- Abstract Eye/Lens Vector Logo -->
+                <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                STUDIO <span class="highlight">EAGLE</span>
+            </a>
+            <nav>
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#services">Services</a>
+                <a href="#portfolio">Portfolio</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Slider -->
+    <section class="hero" id="home">
+        <!-- Dynamic Slides -->
+        <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1579168765467-3b235f938439?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');"></div>
+        <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1601042879364-f3947d3f9c16?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');"></div>
+        <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');"></div>
+        
+        <div class="hero-overlay"></div>
+        <div class="container hero-content">
+            <h1>Big Eye On <br><span class="highlight">Every Angle</span></h1>
+            <p>We combine high-end Sony mirrorless technology with creative vision to deliver cinematic music videos, immersive virtual reality, and premium commercial photography.</p>
+            <a href="#contact" class="btn">Start Your Project</a>
+        </div>
+    </section>
+
+    <!-- About Section with Pattern -->
+    <section class="about bg-pattern" id="about">
+        <div class="blob"></div>
+        <div class="container" style="display: flex; gap: 50px; align-items: center; flex-wrap: wrap;">
+            <div class="about-vector">
+                <!-- Abstract Camera Rig Vector -->
+                <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="100" y="150" width="312" height="200" rx="20" stroke="#f39c12" stroke-width="20"/>
+                    <circle cx="256" cy="250" r="70" stroke="#f39c12" stroke-width="20"/>
+                    <circle cx="256" cy="250" r="30" fill="#f39c12"/>
+                    <rect x="340" y="100" width="40" height="50" rx="10" fill="#f39c12"/>
+                    <path d="M120 150 L160 100 H350 L390 150" stroke="#f39c12" stroke-width="20" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="about-text">
+                <p class="highlight">ABOUT THE STUDIO</p>
+                <h2>Certified Visionaries</h2>
+                <p>As a Google Trusted Photographer and certified digital expert, the vision behind Studio Eagle is simple: uncompromising quality. From utilizing 360-degree cameras to multi-cam podcast setups and Haryanvi/regional music video production, we cover every dimension of digital media.</p>
+                <p>We don't just shoot; we craft experiences using advanced techniques, daily vlogging setups, and high-resolution commercial standards.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Grid with SVGs -->
+    <section class="services" id="services">
+        <div class="container">
+            <div class="section-header">
+                <p>WHAT WE DO</p>
+                <h2>Our <span class="highlight">Expertise</span></h2>
+            </div>
+            <div class="service-grid">
+                <!-- Service 1: 360 Tours -->
+                <div class="service-card">
+                    <svg class="service-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/></svg>
+                    <h3>360° Virtual Tours</h3>
+                    <p>Immersive Google Street View and private virtual tours. Let your customers walk through your space digitally.</p>
+                </div>
+                <!-- Service 2: Music Videos -->
+                <div class="service-card">
+                    <svg class="service-icon" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+                    <h3>Music & Video Production</h3>
+                    <p>Complete script-to-screen production for music videos, regional scripts, and high-energy dynamic edits.</p>
+                </div>
+                <!-- Service 3: Podcast & Vlogs -->
+                <div class="service-card">
+                    <svg class="service-icon" viewBox="0 0 24 24"><path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/></svg>
+                    <h3>Podcast & Vlog Setup</h3>
+                    <p>Professional multi-camera studio recording for podcasts, interviews, and daily high-retention vlogs.</p>
+                </div>
+                <!-- Service 4: Commercial -->
+                <div class="service-card">
+                    <svg class="service-icon" viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+                    <h3>Commercial E-Commerce</h3>
+                    <p>Crisp, highly detailed product photography tailored for Amazon, catalogs, and strict e-commerce standards.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Image Gallery -->
+    <section class="portfolio" id="portfolio">
+        <div class="container">
+            <div class="section-header text-center" style="text-align: center;">
+                <p>OUR WORK</p>
+                <h2>Featured <span class="highlight">Gallery</span></h2>
+            </div>
+            <div class="gallery">
+                <div class="gallery-item" style="background-image: url('https://images.unsplash.com/photo-1621600411688-4be93cd68504?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="gallery-item" style="background-image: url('https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="gallery-item" style="background-image: url('https://images.unsplash.com/photo-1527011045974-43b879b18d22?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="gallery-item" style="background-image: url('https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="gallery-item" style="background-image: url('https://images.unsplash.com/photo-1605652516629-9e20ebdf1eb6?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="gallery-item" style="background-image: url('https://images.unsplash.com/photo-1542044801-38d4eb07dc05?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Work Process -->
+    <section class="process">
+        <div class="container">
+            <div class="section-header">
+                <h2>How We <span class="highlight">Work</span></h2>
+            </div>
+            <div class="timeline">
+                <div class="step"><div class="step-icon">1</div><h4>Concept & Script</h4><p>Understanding your vision and drafting the plan.</p></div>
+                <div class="step"><div class="step-icon">2</div><h4>The Shoot</h4><p>Executing with premium lenses and lighting.</p></div>
+                <div class="step"><div class="step-icon">3</div><h4>Post-Production</h4><p>Color grading, sound design, and sharp edits.</p></div>
+                <div class="step"><div class="step-icon">4</div><h4>Final Delivery</h4><p>Delivering 4K excellence on time.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact bg-pattern" id="contact">
+        <div class="container">
+            <div class="contact-box">
+                <h2>Ready to <span class="highlight">Shoot?</span></h2>
+                <p style="margin-top: 10px;">Drop by our studio or give us a call to discuss your next big project.</p>
+                
+                <div class="contact-details">
+                    <div class="info">
+                        <h4>LOCATION</h4>
+                        <p>Sabzi Mandi Road<br>Uklana Mandi, Hisar</p>
+                    </div>
+                    <div class="info">
+                        <h4>PHONE</h4>
+                        <p>+91 90346 29029</p>
+                    </div>
+                    <div class="info">
+                        <h4>EMAIL</h4>
+                        <p>eagle@bigivie.com</p>
+                    </div>
+                </div>
+                
+                <a href="mailto:eagle@bigivie.com" class="btn" style="margin-top: 40px;">Send an Email</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Studio Eagle. Built for Creators.</p>
+    </footer>
+
+    <!-- Slider Javascript -->
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        let currentSlide = 0;
+
+        function nextSlide() {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+
+        // Change slide every 5 seconds
+        setInterval(nextSlide, 5000);
+    </script>
+</body>
+</html>
